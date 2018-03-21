@@ -10,7 +10,11 @@ import { wordlist } from '../configs';
 
 mirror.model({
   name: 'wallets',
-  initialState: [],
+  initialState: {
+    selected: 0,
+    list: [],
+    balances: {}
+  },
   reducers: {
     set(state, data) {
       return {
@@ -18,22 +22,39 @@ mirror.model({
         ...data
       };
     },
+    setList(state, list) {
+      return {
+        ...state,
+        list
+      };
+    },
     add(state, wallet) {
-      state.push(wallet);
+      state.list.push(wallet);
       return state;
+    },
+    setBalance(state, { name, balance }) {
+      const newData = {};
+      newData[name] = balance;
+      return {
+        ...state,
+        balances: {
+          ...state.balances,
+          ...newData
+        }
+      };
     }
   },
   effects: {
     async load() {
       const wallets = await actions.storage.get('wallets');
       if (!isEmpty(wallets)) {
-        actions.wallets.set(wallets);
+        actions.wallets.setList(wallets);
         return wallets;
       }
       return wallets;
     },
     async check(params, getState) {
-      if (isEmpty(getState().wallets)) {
+      if (isEmpty(getState().wallets.list)) {
         const wallets = await actions.wallets.load();
         if (isEmpty(wallets)) {
           actions.routing.push('/guide');
@@ -51,7 +72,7 @@ mirror.model({
       const creator = process.env.REACT_APP_ACCOUNT_NAME;
       const keyProvider = process.env.REACT_APP_PRIVATE_KEY;
       const httpEndpoint = `http://${process.env.REACT_APP_NETWORK_HOST}:${process.env.REACT_APP_NETWORK_PORT}`;
-      const eos = Eos.Localnet({httpEndpoint, keyProvider});
+      const eos = Eos.Localnet({ httpEndpoint, keyProvider });
       try {
         await eos.newaccount({
           creator,
@@ -87,6 +108,13 @@ mirror.model({
         }
       }
 
+    },
+    async getBalance(name) {
+      const httpEndpoint = `http://${process.env.REACT_APP_NETWORK_HOST}:${process.env.REACT_APP_NETWORK_PORT}`;
+      const eos = Eos.Localnet({ httpEndpoint });
+      const account = await eos.getAccount(name);
+      actions.wallets.setBalance({ name, balance: account.eos_balance });
+      return account.eos_balance;
     }
   }
 });
