@@ -47,8 +47,8 @@ mirror.model({
   effects: {
     async load() {
       const wallets = await actions.storage.get('wallets');
-      if (!isEmpty(wallets)) {
-        actions.wallets.setList(wallets);
+      if (!isEmpty(wallets) && !isEmpty(wallets.list)) {
+        actions.wallets.set(wallets);
         return wallets;
       }
       return wallets;
@@ -56,7 +56,7 @@ mirror.model({
     async check(params, getState) {
       if (isEmpty(getState().wallets.list)) {
         const wallets = await actions.wallets.load();
-        if (isEmpty(wallets)) {
+        if (isEmpty(wallets) || isEmpty(wallets.list)) {
           actions.routing.push('/guide');
         }
       }
@@ -80,7 +80,6 @@ mirror.model({
           owner: publicKey,
           active: publicKey,
           recovery: creator,
-          seed,
           deposit: `1 EOS`
         });
         setTimeout(() => {
@@ -90,6 +89,7 @@ mirror.model({
           publicKey,
           privateKey: AES.encrypt(privateKey, seed),
           name,
+          seed,
           password: AES.encrypt(password, seed)
         };
         actions.wallets.add(wallet);
@@ -115,6 +115,18 @@ mirror.model({
       const account = await eos.getAccount(name);
       actions.wallets.setBalance({ name, balance: account.eos_balance });
       return account.eos_balance;
+    },
+    async transfer({ wallet, name, amount, message = '' }) {
+      const keyProvider = AES.decrypt(wallet.privateKey, wallet.seed);
+      const httpEndpoint = `http://${process.env.REACT_APP_NETWORK_HOST}:${process.env.REACT_APP_NETWORK_PORT}`;
+      const eos = Eos.Localnet({ httpEndpoint, keyProvider });
+      try {
+        await eos.transfer(wallet.name, name, parseInt(amount * 10000, 10), message);
+        return true;
+      } catch (e) {
+        console.error(e);
+        return false;
+      }
     }
   }
 });

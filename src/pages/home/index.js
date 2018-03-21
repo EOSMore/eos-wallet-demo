@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect, actions } from 'mirrorx';
 import isEqual from 'lodash/isEqual';
-import { Card, WingBlank, WhiteSpace, Tag } from 'antd-mobile';
+import { Card, WingBlank, WhiteSpace, Tag, Grid } from 'antd-mobile';
 import walletIcon from '../../assets/wallet.svg';
+import transferIcon from '../../assets/transfer.svg';
 
 class Home extends Component {
   componentDidMount() {
@@ -32,6 +33,12 @@ class Home extends Component {
             <div>账户余额： {balance}</div>
           </Card.Body>
         </Card>
+        <WhiteSpace/>
+        <Grid onClick={e => e.onClick()} columnNum={3} hasLine={false} data={[{
+          icon: transferIcon,
+          text: '转账',
+          onClick: () => actions.routing.push('/transfer')
+        }]} />
       </WingBlank>
     );
 

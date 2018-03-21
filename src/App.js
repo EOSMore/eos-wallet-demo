@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Router, Route, Switch } from 'mirrorx';
 import { NavBar } from 'antd-mobile';
 import './models';
-import { Guide, Home } from './pages';
+import { Guide, Home, Transfer } from './pages';
 import { Initializer } from './components';
 
 class App extends Component {
@@ -17,6 +17,7 @@ class App extends Component {
               <Initializer>
                 <Switch>
                   <Route exact path="/" component={Home} />
+                  <Route exact path="/transfer" component={Transfer} />
                 </Switch>
               </Initializer>
             </Switch>

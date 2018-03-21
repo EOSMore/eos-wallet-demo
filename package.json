@@ -15,6 +15,7 @@
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-scripts": "1.0.17",
+    "recompose": "^0.26.0",
     "scrypt-async": "^2.0.0",
     "store": "^2.0.12"
   },
