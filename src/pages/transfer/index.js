@@ -29,12 +29,12 @@ class Transfer extends Component {
           Toast.fail(`最多 ${maxAmount} EOS`);
         } else {
           Modal.prompt('密码', '请输入钱包密码', async password => {
-            const keyProvider = await actions.wallets.auth({ wallet, password });
-            if (!keyProvider) {
+            const { privateKey } = await actions.wallets.auth({ wallet, password });
+            if (!privateKey) {
               Toast.fail('密码错误');
             } else {
               Toast.loading('', 0);
-              const result = await actions.wallets.transfer({ wallet, keyProvider, ...values });
+              const result = await actions.wallets.transfer({ wallet, privateKey, ...values });
               if (result) {
                 Toast.success('转账成功');
                 actions.routing.push('/');
