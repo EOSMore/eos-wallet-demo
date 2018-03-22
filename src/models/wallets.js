@@ -112,13 +112,19 @@ mirror.model({
           mnemonic
         };
       } catch (e) {
-        const error = JSON.parse(e);
-        const code = error.details.substr(0, 7);
-        if (isEqual(code, '3050001')) {
-          throw new Error('账号名已存在');
-        } else {
-          throw new Error(error.details);
+        let message = e;
+        try {
+          const error = JSON.parse(e);
+          const code = error.details.substr(0, 7);
+          if (isEqual(code, '3050001')) {
+            message = '账号名已存在';
+          } else {
+            message = error.details;
+          }
+        } catch (error) {
+
         }
+        throw new Error(message);
       }
 
     },
