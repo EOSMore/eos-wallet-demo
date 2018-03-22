@@ -2,6 +2,7 @@ import mirror, { actions } from 'mirrorx';
 import isEmpty from 'lodash/isEmpty';
 import isEqual from 'lodash/isEqual';
 import find from 'lodash/find';
+import findIndex from 'lodash/findIndex';
 import bip39 from 'bip39';
 import { randomBytes } from 'crypto';
 import ecc from 'eosjs-ecc';
@@ -68,10 +69,10 @@ mirror.model({
       }
       return wallets;
     },
-    async check(params, getState) {
+    async check(redirectToGuide = true, getState) {
       if (isEmpty(getState().wallets.list)) {
         const wallets = await actions.wallets.load();
-        if (isEmpty(wallets) || isEmpty(wallets.list)) {
+        if (redirectToGuide && (isEmpty(wallets) || isEmpty(wallets.list))) {
           actions.routing.push('/guide');
         }
       }
@@ -121,6 +122,40 @@ mirror.model({
       }
 
     },
+    async importFromMnemonic(mnemonic) {
+      const seed = bip39.mnemonicToSeedHex(mnemonic);
+      const privateKey = ecc.seedPrivate(seed);
+      const publicKey = ecc.privateToPublic(privateKey);
+      const account_names = await actions.wallets.getAccounts(publicKey);
+      return { account_names, seed };
+    },
+    async getAccounts(publicKey) {
+      const httpEndpoint = `http://${process.env.REACT_APP_NETWORK_HOST}:${process.env.REACT_APP_NETWORK_PORT}`;
+      const eos = Eos.Localnet({ httpEndpoint });
+      try {
+        const res = await eos.getKeyAccounts(publicKey);
+        if (res && res.account_names) {
+          return res.account_names;
+        }
+        return [];
+      } catch (error) {
+        console.error(error);
+        return [];
+      }
+
+    },
+    async importAccount({ name, password, seed }, getState) {
+      if (findIndex(getState().wallets.list, { name }) >= 0) {
+        return false;
+      }
+      const wallet = {
+        name,
+        seed: aesEncrypt(seed, password)
+      };
+      actions.wallets.add(wallet);
+      actions.wallets.save();
+      return true;
+    },
     async getBalance(name) {
       const httpEndpoint = `http://${process.env.REACT_APP_NETWORK_HOST}:${process.env.REACT_APP_NETWORK_PORT}`;
       const eos = Eos.Localnet({ httpEndpoint });
@@ -140,9 +175,10 @@ mirror.model({
         return false;
       }
     },
-    async setPassword({ wallet, seed, password }) {
+    async setPassword({ name, seed, password }) {
       seed = aesEncrypt(seed, password);
-      actions.wallets.setSeed({ name: wallet.name, seed });
+      actions.wallets.setSeed({ name, seed });
+      return true;
     },
     async transfer({ wallet, privateKey, name, amount, message = '' }) {
       const httpEndpoint = `http://${process.env.REACT_APP_NETWORK_HOST}:${process.env.REACT_APP_NETWORK_PORT}`;

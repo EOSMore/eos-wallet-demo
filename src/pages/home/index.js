@@ -7,6 +7,7 @@ import walletIcon from '../../assets/wallet.svg';
 import transferIcon from '../../assets/transfer.svg';
 import lockIcon from '../../assets/lock.svg';
 import walletBlackIcon from '../../assets/wallet-black.svg';
+import importIcon from '../../assets/import.svg';
 
 class Home extends Component {
   constructor(props) {
@@ -46,7 +47,7 @@ class Home extends Component {
           if (!password || password.length < 8) {
             Toast.fail('密码至少8位');
           } else {
-            await actions.wallets.setPassword({ wallet, seed, password });
+            await actions.wallets.setPassword({ name: wallet.name, seed, password });
             Toast.success('密码修改成功');
           }
         }, 'secure-text');
@@ -78,6 +79,9 @@ class Home extends Component {
       <List key="action">
         <List.Item onClick={() => actions.routing.push('/guide')} thumb={walletBlackIcon}>
           创建钱包
+        </List.Item>
+        <List.Item onClick={() => actions.routing.push('/import')} thumb={importIcon}>
+          导入钱包
         </List.Item>
       </List>
     ]);
