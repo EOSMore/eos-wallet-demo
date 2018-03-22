@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect, actions } from 'mirrorx';
 import isEqual from 'lodash/isEqual';
+import find from 'lodash/find';
 import { Card, WingBlank, WhiteSpace, Button, Grid, Modal, Drawer, List, Radio, Toast } from 'antd-mobile';
 import walletIcon from '../../assets/wallet.svg';
 import transferIcon from '../../assets/transfer.svg';
@@ -60,9 +61,13 @@ class Home extends Component {
           <Radio.RadioItem
             key={currentWallet.name}
             checked={isEqual(currentWallet.name, wallet.name)}
-            onChange={async () => {
-              await actions.wallets.setSelected(currentWallet.name);
+            onChange={() => {
+              Toast.loading("", 0);
               this.handleDrawerOpenChange();
+              setTimeout(async () => {
+                await actions.wallets.setSelected(currentWallet.name);
+                Toast.hide();
+              }, 500);
             }}
           >
             {currentWallet.name}
@@ -121,10 +126,10 @@ class Home extends Component {
 
 export default connect(({ wallets }) => {
   const { list, selected, balances } = wallets;
-  const wallet = list[selected];
+  const wallet = find(list, { name: selected }) || {};
   return {
-    wallet: wallet || {},
+    wallet,
     wallets: list,
-    balance: (wallet && wallet.name && balances) ? balances[wallet.name] : ''
+    balance: balances ? balances[selected] : ''
   };
 })(Home);

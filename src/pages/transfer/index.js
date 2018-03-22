@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { actions, connect } from 'mirrorx';
 import { WingBlank, WhiteSpace, List, InputItem, Button, Modal, Toast } from 'antd-mobile';
 import isEqual from "lodash/isEqual";
+import find from 'lodash/find';
 import { createForm } from 'rc-form';
 import compose from 'recompose/compose';
 
@@ -108,10 +109,10 @@ class Transfer extends Component {
 const enhance = compose(
   connect(({ wallets }) => {
     const { list, selected, balances } = wallets;
-    const wallet = list[selected];
-    const balance = (wallet && wallet.name && balances) ? balances[wallet.name] : '';
+    const wallet = find(list, { name: selected }) || {};
+    const balance = balances ? balances[selected] : '';
     return {
-      wallet: wallet || {},
+      wallet,
       balance
     };
   }),
