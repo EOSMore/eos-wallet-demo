@@ -15,7 +15,7 @@ class WalletImport extends Component {
     };
   }
   componentWillMount() {
-    actions.wallets.check();
+    actions.wallets.check(false);
   }
   componentDidMount() {
     actions.header.set({
