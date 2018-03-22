@@ -2,6 +2,7 @@ import mirror, { actions } from 'mirrorx';
 import isEmpty from 'lodash/isEmpty';
 import isEqual from 'lodash/isEqual';
 import find from 'lodash/find';
+import findIndex from 'lodash/findIndex';
 import bip39 from 'bip39';
 import { randomBytes } from 'crypto';
 import ecc from 'eosjs-ecc';
@@ -48,6 +49,13 @@ mirror.model({
       const wallet = find(state.list, { name });
       wallet.seed = seed;
       return state;
+    },
+    setSelected(state, name) {
+      const selected = findIndex(state.list, { name }) || 0;
+      return {
+        ...state,
+        selected
+      };
     }
   },
   effects: {
