@@ -31,7 +31,10 @@ mirror.model({
     },
     add(state, wallet) {
       state.list.push(wallet);
-      return state;
+      return {
+        ...state,
+        selected: wallet.name
+      };
     },
     setBalance(state, { name, balance }) {
       const newData = {};
