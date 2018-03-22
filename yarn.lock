@@ -72,12 +72,6 @@ address@1.0.3, address@^1.0.1:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/address/-/address-1.0.3.tgz#b5f50631f8d6cec8bd20c963963afb55e06cbce9"
 
-aes-oop@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/aes-oop/-/aes-oop-1.0.4.tgz#4630d2767e22d670e5e237ba73af12f356a46bde"
-  dependencies:
-    sjcl "^1.0.7"
-
 ajv-keywords@^2.0.0, ajv-keywords@^2.1.0:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/ajv-keywords/-/ajv-keywords-2.1.1.tgz#617997fc5f60576894c435f940d819e135b80762"

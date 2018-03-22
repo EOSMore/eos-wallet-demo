@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { actions, connect } from 'mirrorx';
-import { WingBlank, WhiteSpace, List, InputItem, Button, Toast } from 'antd-mobile';
+import { WingBlank, WhiteSpace, List, InputItem, Button, Modal, Toast } from 'antd-mobile';
 import isEqual from "lodash/isEqual";
 import { createForm } from 'rc-form';
 import compose from 'recompose/compose';
@@ -28,14 +28,21 @@ class Transfer extends Component {
         } else if (values.amount > maxAmount) {
           Toast.fail(`最多 ${maxAmount} EOS`);
         } else {
-          Toast.loading('', 0);
-          const result = await actions.wallets.transfer({ wallet, ...values });
-          if (result) {
-            Toast.success('转账成功');
-            actions.routing.push('/');
-          } else {
-            Toast.fail('转账失败');
-          }
+          Modal.prompt('密码', '请输入钱包密码', async password => {
+            const keyProvider = await actions.wallets.auth({ wallet, password });
+            if (!keyProvider) {
+              Toast.fail('密码错误');
+            } else {
+              Toast.loading('', 0);
+              const result = await actions.wallets.transfer({ wallet, keyProvider, ...values });
+              if (result) {
+                Toast.success('转账成功');
+                actions.routing.push('/');
+              } else {
+                Toast.fail('转账失败');
+              }
+            }
+          }, 'secure-text');
         }
       }
     });

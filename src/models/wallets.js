@@ -5,8 +5,8 @@ import bip39 from 'bip39';
 import { randomBytes } from 'crypto';
 import ecc from 'eosjs-ecc';
 import Eos from 'eosjs';
-import AES from 'aes-oop';
 import { wordlist } from '../configs';
+import { aesEncrypt, aesDecrypt } from '../utils';
 
 mirror.model({
   name: 'wallets',
@@ -86,11 +86,8 @@ mirror.model({
           eos.transfer(creator, name, 100000, '');
         }, 1000);
         const wallet = {
-          publicKey,
-          privateKey: AES.encrypt(privateKey, seed),
           name,
-          seed,
-          password: AES.encrypt(password, seed)
+          seed: aesEncrypt(seed, password)
         };
         actions.wallets.add(wallet);
         actions.wallets.save();
@@ -116,8 +113,15 @@ mirror.model({
       actions.wallets.setBalance({ name, balance: account.eos_balance });
       return account.eos_balance;
     },
-    async transfer({ wallet, name, amount, message = '' }) {
-      const keyProvider = AES.decrypt(wallet.privateKey, wallet.seed);
+    async auth({ wallet, password }) {
+      try {
+        const seed = aesDecrypt(wallet.seed, password);
+        return ecc.seedPrivate(seed);
+      } catch (error) {
+        return false;
+      }
+    },
+    async transfer({ wallet, keyProvider, name, amount, message = '' }) {
       const httpEndpoint = `http://${process.env.REACT_APP_NETWORK_HOST}:${process.env.REACT_APP_NETWORK_PORT}`;
       const eos = Eos.Localnet({ httpEndpoint, keyProvider });
       try {
