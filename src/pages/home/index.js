@@ -12,6 +12,11 @@ class Home extends Component {
     if (wallet.name) {
       actions.wallets.getBalance(wallet.name);
     }
+    actions.header.set({
+      title: 'More Wallet',
+      right: <span>钱包管理</span>,
+      left: null
+    });
   }
   componentWillReceiveProps(nextProps) {
     if (!isEqual(nextProps.wallet, this.props.wallet)) {
