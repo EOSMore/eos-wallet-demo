@@ -102,7 +102,7 @@ class Home extends Component {
           <WhiteSpace/>
           <Card>
             <Card.Header
-              title={<div><span style={{ fontSize: 10, color: "#108ee9"}}>当前钱包</span>{wallet.name}</div>}
+              title={<div><span style={{ fontSize: 10, color: "#108ee9"}}>当前钱包</span><br/>{wallet.name}</div>}
               thumb={walletIcon}
               thumbStyle={{ width: 60, height: 60 }}
               extra={<Button type="ghost" size="small" inline onClick={this.handleDrawerOpenChange}>切换钱包</Button>}
