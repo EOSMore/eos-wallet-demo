@@ -5,6 +5,7 @@ import { Card, WingBlank, WhiteSpace, Button, Grid, Modal, Drawer, List, Radio, 
 import walletIcon from '../../assets/wallet.svg';
 import transferIcon from '../../assets/transfer.svg';
 import lockIcon from '../../assets/lock.svg';
+import walletBlackIcon from '../../assets/wallet-black.svg';
 
 class Home extends Component {
   constructor(props) {
@@ -20,7 +21,7 @@ class Home extends Component {
     }
     actions.header.set({
       title: 'More Wallet',
-      right: <span>钱包管理</span>,
+      right: null,
       left: null
     });
   }
@@ -53,19 +54,28 @@ class Home extends Component {
   };
   renderSidebar = () => {
     const { wallets, wallet } = this.props;
-    return (
-      <List renderHeader={() => '选择钱包'}>
+    return ([
+      <List key="list" renderHeader={() => '选择钱包'}>
         {wallets.map(currentWallet => (
           <Radio.RadioItem
             key={currentWallet.name}
             checked={isEqual(currentWallet.name, wallet.name)}
-            onChange={() => actions.wallets.setSelected(currentWallet.name)}
+            onChange={async () => {
+              await actions.wallets.setSelected(currentWallet.name);
+              this.handleDrawerOpenChange();
+            }}
           >
             {currentWallet.name}
           </Radio.RadioItem>
         ))}
+      </List>,
+      <WhiteSpace key="space" size="xl"/>,
+      <List key="action">
+        <List.Item onClick={() => actions.routing.push('/guide')} thumb={walletBlackIcon}>
+          创建钱包
+        </List.Item>
       </List>
-    );
+    ]);
   };
   render() {
     const { drawerOpen } = this.state;
