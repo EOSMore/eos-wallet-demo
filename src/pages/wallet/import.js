@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { actions } from 'mirrorx';
 import isEmpty from 'lodash/isEmpty';
-import { WingBlank, WhiteSpace, List, InputItem, Radio, TextareaItem, Button, Modal, Toast } from 'antd-mobile';
+import { WingBlank, WhiteSpace, List, InputItem, Radio, TextareaItem, Button, Modal, Icon, Toast } from 'antd-mobile';
 import { createForm } from 'rc-form';
 
 class WalletImport extends Component {
@@ -16,6 +16,13 @@ class WalletImport extends Component {
   }
   componentWillMount() {
     actions.wallets.check();
+  }
+  componentDidMount() {
+    actions.header.set({
+      title: '导入钱包',
+      right: null,
+      left: <Icon onClick={() => actions.routing.goBack()} type="left" />
+    });
   }
   handleSubmit = () => {
     this.props.form.validateFields({ force: true }, async error => {

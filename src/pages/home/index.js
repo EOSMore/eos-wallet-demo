@@ -22,7 +22,7 @@ class Home extends Component {
       actions.wallets.getBalance(wallet.name);
     }
     actions.header.set({
-      title: 'More Wallet',
+      title: 'More钱包',
       right: null,
       left: null
     });

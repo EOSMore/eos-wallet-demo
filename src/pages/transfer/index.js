@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { actions, connect } from 'mirrorx';
-import { WingBlank, WhiteSpace, List, InputItem, Button, Modal, Toast } from 'antd-mobile';
+import { WingBlank, WhiteSpace, List, InputItem, Button, Modal, Icon, Toast } from 'antd-mobile';
 import isEqual from "lodash/isEqual";
 import find from 'lodash/find';
 import { createForm } from 'rc-form';
@@ -12,6 +12,11 @@ class Transfer extends Component {
     if (wallet.name) {
       actions.wallets.getBalance(wallet.name);
     }
+    actions.header.set({
+      title: '转账',
+      right: null,
+      left: <Icon onClick={() => actions.routing.push('/')} type="left" />
+    });
   }
   componentWillReceiveProps(nextProps) {
     if (!isEqual(nextProps.wallet, this.props.wallet)) {
