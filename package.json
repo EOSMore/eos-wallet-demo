@@ -12,6 +12,7 @@
     "mirrorx": "^0.2.10",
     "rc-form": "^2.1.7",
     "react": "^16.2.0",
+    "react-document-title": "^2.0.3",
     "react-dom": "^16.2.0",
     "react-scripts": "1.0.17",
     "recompose": "^0.26.0",
