@@ -102,7 +102,7 @@ class WalletImport extends Component {
             <Button type="primary" onClick={this.handleSubmit}>导入</Button>
           </WingBlank>
         </form>
-        <Modal visible={visible} transparent title="选择要导入的钱包">
+        <Modal visible={visible} transparent title="选择要导入的钱包" footer={[{ text: '取消', onPress: () => this.setState({ visible: false, account_names: [] }) }]}>
           <List>
             {account_names.map(account_name => (
               <Radio.RadioItem onChange={() => this.handleImport(account_name)} key={account_name}>{account_name}</Radio.RadioItem>
