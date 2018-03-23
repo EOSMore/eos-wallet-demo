@@ -60,7 +60,7 @@ class Transactions extends Component {
           <WhiteSpace size="lg" />
           {data && data.map(transaction => (
             <div key={transaction.id}>
-              <List renderHeader={() => moment(transaction.expiration).fromNow()}>
+              <List renderHeader={() => moment.utc(transaction.expiration).fromNow()}>
                 {transaction.messages.map((message, index) => (
                   <TransactionMessage key={index} message={message} name={wallet.name}/>
                 ))}
