@@ -1,6 +1,7 @@
 import mirror, { actions } from 'mirrorx';
 import Eos from "eosjs";
 import concat from 'lodash/concat';
+import isEmpty from 'lodash/isEmpty';
 
 mirror.model({
   name: 'transactions',
@@ -49,7 +50,9 @@ mirror.model({
             messages: transaction.transaction.messages
           };
         });
-        actions.transactions.setParams({ name, param: { skip_seq, num_seq } });
+        if (!isEmpty(data)) {
+          actions.transactions.setParams({ name, param: { skip_seq, num_seq } });
+        }
         if (skip_seq === 0) {
           actions.transactions.setList({ name, data });
         } else {
