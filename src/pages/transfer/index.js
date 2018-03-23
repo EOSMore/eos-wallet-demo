@@ -79,7 +79,7 @@ class Transfer extends Component {
             </InputItem>
             <InputItem
               placeholder={`最多能转${maxAmount} EOS`}
-              type="money"
+              type="digit"
               extra="EOS"
               moneyKeyboardAlign="left"
               error={!!getFieldError('amount')}
