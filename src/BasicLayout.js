@@ -1,7 +1,7 @@
 import React from 'react';
 import { Switch, Route, connect } from 'mirrorx';
 import { NavBar } from 'antd-mobile';
-import {Guide, Home, Transfer, WalletImport } from "./pages";
+import {Guide, Home, Transfer, WalletImport, Transaction } from "./pages";
 import { Initializer, DocumentTitle } from './components';
 
 const BasicLayout = ({ header }) => (
@@ -15,6 +15,7 @@ const BasicLayout = ({ header }) => (
           <Switch>
             <Route exact path="/" component={Home} />
             <Route exact path="/transfer" component={Transfer} />
+            <Route exact path="/transactions" component={Transaction} />
           </Switch>
         </Initializer>
       </Switch>

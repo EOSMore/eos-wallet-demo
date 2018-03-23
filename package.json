@@ -10,6 +10,7 @@
     "eosjs-ecc": "^2.0.1",
     "lodash": "^4.17.5",
     "mirrorx": "^0.2.10",
+    "moment": "^2.21.0",
     "rc-form": "^2.1.7",
     "react": "^16.2.0",
     "react-document-title": "^2.0.3",

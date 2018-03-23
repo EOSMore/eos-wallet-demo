@@ -8,6 +8,7 @@ import transferIcon from '../../assets/transfer.svg';
 import lockIcon from '../../assets/lock.svg';
 import walletBlackIcon from '../../assets/wallet-black.svg';
 import importIcon from '../../assets/import.svg';
+import listIcon from '../../assets/list.svg';
 
 class Home extends Component {
   constructor(props) {
@@ -116,6 +117,10 @@ class Home extends Component {
             icon: transferIcon,
             text: '转账',
             onClick: () => actions.routing.push('/transfer')
+          }, {
+            icon: listIcon,
+            text: '交易记录',
+            onClick: () => actions.routing.push('/transactions')
           }, {
             icon: lockIcon,
             text: '修改密码',
