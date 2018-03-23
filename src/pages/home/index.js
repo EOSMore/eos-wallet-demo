@@ -67,7 +67,7 @@ class Home extends Component {
               Toast.loading("", 0);
               this.handleDrawerOpenChange();
               setTimeout(async () => {
-                await actions.wallets.setSelected(currentWallet.name);
+                await actions.wallets.changeSelected(currentWallet.name);
                 Toast.hide();
               }, 500);
             }}

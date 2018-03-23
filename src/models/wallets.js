@@ -128,6 +128,10 @@ mirror.model({
       }
 
     },
+    async changeSelected(selected) {
+      actions.wallets.setSelected(selected);
+      await actions.wallets.save();
+    },
     async importFromMnemonic(mnemonic) {
       const seed = bip39.mnemonicToSeedHex(mnemonic);
       const privateKey = ecc.seedPrivate(seed);
